@@ -13,10 +13,10 @@
         },
         "vscode": {
             "extensions": [
-                "ritwickdey.LiveServer",  //  Install LiveServer to view pages
+                "ritwickdey.LiveServer"  //  Install LiveServer to view pages
             ],
             "settings": {
-                "liveServer.settings.donotShowInfoMsg": true,
+                "liveServer.settings.donotShowInfoMsg": true
             }
         }
     }
