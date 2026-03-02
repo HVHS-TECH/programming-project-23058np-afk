@@ -1,4 +1,7 @@
 function setup() {
+    textSize(32);
+    fill(255);
+    text('hi', 50, 50);
     canvas = createCanvas(500,500);
     console.log("hello words");
 
@@ -8,6 +11,21 @@ function draw() {
     //canvas = createCanvas(frameCount*5,500);
     background("black");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 -- Game planning -- 18 spells left
