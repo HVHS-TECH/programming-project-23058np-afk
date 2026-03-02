@@ -1,17 +1,79 @@
-function setup() {
+function setup() {  
     textSize(32);
     fill(255);
-    text('hi', 50, 50);
     canvas = createCanvas(500,500);
     console.log("hello words");
+    testButton = new Sprite(width/2,height/2,100*1.61803398875,100);
+    testButton.color = ("white");
+    testButton.text = ("hi");
 
 }
 
 function draw() {
     //canvas = createCanvas(frameCount*5,500);
     background("black");
+    if (testButton.mouse.pressed()) {
+        console.log(testButton.mouse.pressed())
+        
+    }
+    
+
+
 }
 
+// variable testButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
+
+/* 
+p5.play sprite modifers pulled from chat gpt because i couldnt find them online. I think you have to create some account for it, and it need your student id/
+
+In p5.play (and the modern p5play library), sprites are the core building blocks for 2D games, featuring various modifiers to change their appearance, physical behavior, movement, and interactions. 
+Here is a breakdown of key sprite modifiers:
+1. Appearance and Visual Modifiers
+.addAnimation() / .addAni(): Adds animations to a sprite.
+.image / .img: Sets a static image for the sprite.
+.color / .shapeColor: Changes the color of a default rectangle/circle sprite.
+.scale: Uniformly scales the sprite's visual appearance and collider.
+.rotation: Sets the sprite's rotation angle.
+.visible: A boolean (true/false) to hide or show a sprite.
+.layer: Determines the draw order (higher numbers are drawn on top).
+.opacity: Sets the transparency of the sprite. 
+Processing Forum
+Processing Forum
+ +8
+2. Movement and Position Modifiers
+.x, .y: Directly sets the position of the sprite.
+.velocity.x, .velocity.y / .vel: Sets the movement speed in pixels per frame.
+.speed & .direction: Controls movement using angle and speed.
+.moveTowards() / .moveTo(): Moves a sprite towards a target point.
+.rotateTo(): Rotates the sprite towards an angle or direction.
+.friction: Determines how quickly a sprite slows down.
+.rotationSpeed: Sets the speed at which a sprite rotates. 
+YouTube
+YouTube
+ +4
+3. Physics and Collision Modifiers
+.collider: Defines the active area for interactions ("static", "dynamic", "kinematic", "none").
+.setCollider(type, offsetX, offsetY, width, height): Defines the shape (rectangle, circle) and size of the hitbox.
+.debug: Set to true to visualize the collider hitbox.
+.mass: Affects how the sprite behaves in collisions with others.
+.bounciness: Determines how much energy is retained in a collision.
+.rotationLock: Prevents the sprite from rotating due to physics collisions. 
+YouTube
+YouTube
+ +4
+4. Interaction Modifiers
+.collides(): Detects if a sprite has touched another; returns true only on the first frame of contact.
+.colliding(): Returns true every frame two sprites are touching.
+.collided(): Returns true when two sprites are no longer touching.
+.overlap(): Similar to collide, but allows sprites to pass through each other while detecting the interaction. 
+YouTube
+YouTube
+ +2
+5. Life and Group Modifiers
+.life: Sets the number of frames before a sprite is automatically removed.
+.remove(): Immediately removes the sprite from the sketch.
+.group: Adds the sprite to a group for collective modification.
+*/
 
 
 
