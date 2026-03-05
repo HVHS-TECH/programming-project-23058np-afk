@@ -1,27 +1,41 @@
 function setup() {  
-    textSize(32);
+    gameStarted = 0;
+    textSize(24);
     fill(255);
     canvas = createCanvas(500,500);
-    console.log("hello words");
-    testButton = new Sprite(width/2,height/2,100*1.61803398875,100);
-    testButton.color = ("white");
-    testButton.text = ("hi");
+    startButton = new Sprite(width/2,height/2,100*1.61,100)
+    startButton.color = ("white");
+    startButton.text = ("Start Game");
+    caveGuy = new Sprite(width+50,height/2,50,100);
+    caveGuy.color = ("rgb(98, 92, 88)");
+    caveGuy.drag = 5;
+
 
 }
+
 
 function draw() {
-    //canvas = createCanvas(frameCount*5,500);
-    background("black");
-    if (testButton.mouse.pressed()) {
-        console.log(testButton.mouse.pressed())
-        
+    r = 230
+    g = 230;
+    if (gameStarted == 0) {
+        background("rgb(0, 0, 0)");
+        if (startButton.mouse.pressed()) {
+            startGame();
+        }
+    } else {
+        background(RGB230, 230, 230);
     }
-    
-
-
 }
 
-// variable testButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
+function startGame() {
+    gameStarted = 1;
+    startButton.remove();
+    caveGuy.vel.x = -25;
+}
+function sleep() {
+    
+}
+// variable startButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
 
 /* 
 p5.play sprite modifers pulled from chat gpt because i couldnt find them online. I think you have to create some account for it, and it need your student id/
@@ -37,9 +51,7 @@ Here is a breakdown of key sprite modifiers:
 .visible: A boolean (true/false) to hide or show a sprite.
 .layer: Determines the draw order (higher numbers are drawn on top).
 .opacity: Sets the transparency of the sprite. 
-Processing Forum
-Processing Forum
- +8
+
 2. Movement and Position Modifiers
 .x, .y: Directly sets the position of the sprite.
 .velocity.x, .velocity.y / .vel: Sets the movement speed in pixels per frame.
@@ -48,9 +60,7 @@ Processing Forum
 .rotateTo(): Rotates the sprite towards an angle or direction.
 .friction: Determines how quickly a sprite slows down.
 .rotationSpeed: Sets the speed at which a sprite rotates. 
-YouTube
-YouTube
- +4
+
 3. Physics and Collision Modifiers
 .collider: Defines the active area for interactions ("static", "dynamic", "kinematic", "none").
 .setCollider(type, offsetX, offsetY, width, height): Defines the shape (rectangle, circle) and size of the hitbox.
@@ -58,17 +68,13 @@ YouTube
 .mass: Affects how the sprite behaves in collisions with others.
 .bounciness: Determines how much energy is retained in a collision.
 .rotationLock: Prevents the sprite from rotating due to physics collisions. 
-YouTube
-YouTube
- +4
+
 4. Interaction Modifiers
 .collides(): Detects if a sprite has touched another; returns true only on the first frame of contact.
 .colliding(): Returns true every frame two sprites are touching.
 .collided(): Returns true when two sprites are no longer touching.
 .overlap(): Similar to collide, but allows sprites to pass through each other while detecting the interaction. 
-YouTube
-YouTube
- +2
+
 5. Life and Group Modifiers
 .life: Sets the number of frames before a sprite is automatically removed.
 .remove(): Immediately removes the sprite from the sketch.
