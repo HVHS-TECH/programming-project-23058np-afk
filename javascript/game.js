@@ -5,14 +5,16 @@ function setup() {
     gameStarted = 0;
     textSize(24);
     fill(255);
+    stroke("white");
     canvas = createCanvas(500,500);
-    startButton = new Sprite(width/2,height/2,100*1.61,100)
+    startButton = new Sprite(width/2,height/2,100*1.61,100,'s');
     startButton.color = ("white");
     startButton.text = ("Start Game");
-    caveGuy = new Sprite(width+50,height/2,50,100);
-    caveGuy.color = ("rgb(98, 92, 88)");
-    caveGuy.drag = 5;
-
+    startButton.overlaps(allSprites);
+    stick = new Sprite(width/2,height/2,10,100);
+    stick.color = ("rgb(77, 59, 32)");
+    stick.strokeWeight = 0;
+    stick.opacity = 0;
 
 }
 
@@ -21,19 +23,24 @@ function draw() {
     if (gameStarted == 0) {
         background("rgb(0, 0, 0)");
         if (startButton.mouse.pressed()) {
-            startGame();
+        startGame();
         }
-    } else {
+    } 
+    if (gameStarted ==1) { //on starting game
         background(rgbR, rgbG, rgbB);
+        stick.opacity += 0.03;
+        left = Math.min(kb.pressing("left"),1)
+        right = Math.min(kb.pressing("right"),1)
+        stickSide = (left - right);
+        stick.x = width/2-50*stickSide;
     }
 }
 
 function startGame() {
     gameStarted = 1;
     startButton.remove();
-    caveGuy.vel.x = -25;
-    await (caveGuy.vel.x = 0) 
-    C
+    
+
 }
 
 // variable startButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
