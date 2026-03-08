@@ -1,4 +1,7 @@
 function setup() {  
+    rgbR = 230;
+    rgbG = 230;
+    rgbB = 230;
     gameStarted = 0;
     textSize(24);
     fill(255);
@@ -15,15 +18,13 @@ function setup() {
 
 
 function draw() {
-    r = 230
-    g = 230;
     if (gameStarted == 0) {
         background("rgb(0, 0, 0)");
         if (startButton.mouse.pressed()) {
             startGame();
         }
     } else {
-        background(RGB230, 230, 230);
+        background(rgbR, rgbG, rgbB);
     }
 }
 
@@ -31,10 +32,10 @@ function startGame() {
     gameStarted = 1;
     startButton.remove();
     caveGuy.vel.x = -25;
+    await (caveGuy.vel.x = 0) 
+    C
 }
-function sleep() {
-    
-}
+
 // variable startButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
 
 /* 
