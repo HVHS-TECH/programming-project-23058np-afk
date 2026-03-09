@@ -2,12 +2,13 @@ function setup() {
     rgbR = 230;
     rgbG = 230;
     rgbB = 230;
-    gameStarted = 0;
+    gameStarted = false;
     textSize(24);
     fill(255);
     stroke("white");
     canvas = createCanvas(500,500);
     startButton = new Sprite(width/2,height/2,100*1.61,100,'s');
+    console.log(startButton);
     startButton.color = ("white");
     startButton.text = ("Start Game");
     startButton.overlaps(allSprites);
@@ -15,29 +16,76 @@ function setup() {
     stick.color = ("rgb(77, 59, 32)");
     stick.strokeWeight = 0;
     stick.opacity = 0;
-
+    
 }
 
-
+stickMovement = 0;
+totalMovement = 0;
+friction = 0;
+frictionIncrement = 0;
+fireStarted = true;
+frictionThreshold = 10;
 function draw() {
-    if (gameStarted == 0) {
+    if (gameStarted == true) { 
+     
+        background(rgbR, rgbG, rgbB);
+
+
+        function getStickOrientation() {
+            left = Math.min(kb.pressing("left"),1);
+            right = Math.min(kb.pressing("right"),1);
+            stickSide = (left - right);
+        }
+        function moveStick() {
+            if (stickSide != stickMovement) {
+                totalMovement = stickMovement - stickSide
+            }
+            return totalMovement
+            
+        }
+        totalMovement = 0; // why does it break if not here?
+        function generateFriction () {
+            frictionIncrement = Math.abs(totalMovement);
+            friction = friction + frictionIncrement;
+            text(friction, 50,50);
+            function checkThreshold() {
+                function startFire() {
+                    fireStarted = true;
+                }
+                if (friction >= frictionThreshold) {
+                    startFire();
+                }
+            }
+        }
+        function stickVisuals() {
+        stick.opacity += 0.03;
+        stick.x = width/2-50*stickSide;
+        }
+
+        // Running functions seperater
+        
+        getStickOrientation();
+        moveStick();
+        if 
+        if (fireStarted == true) {
+            manageFire();
+        }
+        generateFriction();
+        stickVisuals(); //Must be last to run
+        stickMovement = stickSide;// this has to go even laster.. idk
+    } else {
         background("rgb(0, 0, 0)");
         if (startButton.mouse.pressed()) {
         startGame();
         }
-    } 
-    if (gameStarted ==1) { //on starting game
-        background(rgbR, rgbG, rgbB);
-        stick.opacity += 0.03;
-        left = Math.min(kb.pressing("left"),1)
-        right = Math.min(kb.pressing("right"),1)
-        stickSide = (left - right);
-        stick.x = width/2-50*stickSide;
     }
 }
-
+/*
+left to right
+it need to track when and how far you go left to right
+*/
 function startGame() {
-    gameStarted = 1;
+    gameStarted = true;
     startButton.remove();
     
 
