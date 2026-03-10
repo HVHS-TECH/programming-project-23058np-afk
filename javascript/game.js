@@ -9,66 +9,68 @@ function setup() {
     canvas = createCanvas(500,500);
     startButton = new Sprite(width/2,height/2,100*1.61,100,'s');
     console.log(startButton);
+
     startButton.color = ("white");
     startButton.text = ("Start Game");
     startButton.overlaps(allSprites);
-    stick = new Sprite(width/2,height/2,10,100);
+
+    stick = new Sprite(width/2,height/2,10,100,'k');
     stick.color = ("rgb(77, 59, 32)");
     stick.strokeWeight = 0;
     stick.opacity = 0;
-    
+
+    fire = new Sprite(width/2,height/2,50);
+    fire.scale.x = 2;
+    fire.scale.y = 0.5;
+
 }
 
 stickMovement = 0;
 totalMovement = 0;
 friction = 0;
 frictionIncrement = 0;
-fireStarted = true;
-frictionThreshold = 10;
+fireStarted = false;
+const FRICTION_TRESHOLD = 10;
+function startGame() {
+    gameStarted = true;
+    startButton.remove();
+}
+function getStickOrientation() {
+    left = Math.min(kb.pressing("left"),1);
+    right = Math.min(kb.pressing("right"),1);
+    stickSide = (left - right);
+}
+function moveStick() {
+    if (stickSide != stickMovement) {
+        totalMovement = stickMovement - stickSide;
+    }
+    return totalMovement
+}
+totalMovement = 0; // why does it break if not here?
+function generateFriction () {
+    frictionIncrement = Math.abs(totalMovement);
+    friction = friction + frictionIncrement;
+    text(friction, 50,50);
+    function checkThreshold() {
+        if (friction >= FRICTION_TRESHOLD) {
+        fireStarted = true;
+        } else {
+        fireStarted = false;
+        }
+    }
+    checkThreshold();
+}
+function stickVisuals() {
+    stick.opacity += 0.03;
+    stick.x = width/2-50*stickSide;
+}
 function draw() {
-    if (gameStarted == true) { 
-     
+    if (gameStarted == true) {
         background(rgbR, rgbG, rgbB);
-
-
-        function getStickOrientation() {
-            left = Math.min(kb.pressing("left"),1);
-            right = Math.min(kb.pressing("right"),1);
-            stickSide = (left - right);
-        }
-        function moveStick() {
-            if (stickSide != stickMovement) {
-                totalMovement = stickMovement - stickSide
-            }
-            return totalMovement
-            
-        }
-        totalMovement = 0; // why does it break if not here?
-        function generateFriction () {
-            frictionIncrement = Math.abs(totalMovement);
-            friction = friction + frictionIncrement;
-            text(friction, 50,50);
-            function checkThreshold() {
-                function startFire() {
-                    fireStarted = true;
-                }
-                if (friction >= frictionThreshold) {
-                    startFire();
-                }
-            }
-        }
-        function stickVisuals() {
-        stick.opacity += 0.03;
-        stick.x = width/2-50*stickSide;
-        }
-
-        // Running functions seperater
-        
         getStickOrientation();
-        moveStick();
-        if 
+        moveStick(); 
         if (fireStarted == true) {
-            manageFire();
+            //ok
         }
         generateFriction();
         stickVisuals(); //Must be last to run
@@ -80,16 +82,7 @@ function draw() {
         }
     }
 }
-/*
-left to right
-it need to track when and how far you go left to right
-*/
-function startGame() {
-    gameStarted = true;
-    startButton.remove();
-    
 
-}
 
 // variable startButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
 
