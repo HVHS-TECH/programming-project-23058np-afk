@@ -1,3 +1,4 @@
+let fire
 function setup() {  
     rgbR = 230;
     rgbG = 230;
@@ -12,17 +13,21 @@ function setup() {
     startButton.color = ("white");
     startButton.text = ("Start Game");
     startButton.overlaps(allSprites);
-    stick = new Sprite(width/2,height/2,10,100);
+    stick = new Sprite(width/2,height/2,10,100,'s');
     stick.color = ("rgb(77, 59, 32)");
     stick.strokeWeight = 0;
     stick.opacity = 0;
+
+    fire = new Group();
+    
 }
 stickMovement = 0;
 totalMovement = 0;
 friction = 0;
 frictionIncrement = 0;
-fireStarted = true;
+fireStarted = false;
 frictionThreshold = 10;
+afv = 0;
 function draw() {
     if (gameStarted == true) { 
      
@@ -55,9 +60,7 @@ function draw() {
             }
             checkThreshold();
         }
-        endGame() {
-
-        }
+        
         function stickVisuals() {
         stick.opacity += 0.03;
         stick.x = width/2-50*stickSide;
@@ -67,8 +70,9 @@ function draw() {
         
         getStickOrientation();
         moveStick(); 
-        if (fireStarted == true) {
+        if (fireStarted == true && afv == 0) {
             endGame();
+            afv = 1;
         }
         generateFriction();
         stickVisuals(); //Must be last to run
@@ -88,6 +92,18 @@ function startGame() {
     gameStarted = true;
     startButton.remove();
 }
+function endGame() {
+    console.log("gamedone");
+    for (i = 0; i < 100; i++) {
+    fire.diameter = random(10,20);
+    fire.drag = random(1,10)
+    fire.vel.x = random(-5,5)
+    fire.vel.y = random(1,5)
+    fire = new Sprite()
+    //https://www.youtube.com/watch?v=qBt_w3SELnw
+    } 
+}
+
 // variable startButton can be referred to  as t or testB or test in the code after  declaration if there are no other variables that shaare theese letters. use as little as possible
 
 /* 
