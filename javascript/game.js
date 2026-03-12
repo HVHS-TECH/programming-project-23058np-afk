@@ -42,9 +42,9 @@ function startGame() {
     gameStarted = true;
     secondsToStart = millis() / 1000,1; // "starts" a timer
     campfire.visible = true;
+    stick.visible = true;
     startButton.remove();
     controlButton.remove();
-    stick.visible = true;
 }
 
 function showControl() {
