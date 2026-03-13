@@ -1,4 +1,3 @@
-
 /*Spamming game that requires you to spam left and right arrow keys as fast as you can, 
 With theme of lighting a fire*/
 // all setup vars here
@@ -68,22 +67,23 @@ function startGame() {
         startButton.remove();
         controlButton.remove();
     }
-    updateGameVisuals
-    changeGameState();
+    updateGameVisuals();
 
 }
 
 function endGame() {
     function showTimeToWin() {
+        textSize(32);
         if (gameEnded == false) {
+            
             seconds = millis() / 1000;
             secondsToWin = round(seconds - secondsToStart,1);
             gameEnded = true;       
-            text(`took ${secondsToWin} to win\nctrl + r to restart`,width/2, 400);   
-            textSize(32);
+            
+            
         }
+        text(`took ${secondsToWin}s to win\nctrl + r to restart`,width/2, 400);
     }
-
     function makeWinningEmberJelliesOfVictory() {
         WinningEmberJellyOfVictory = new Sprite(width/2,height/2+25,10,'d');
         WinningEmberJellyOfVictory.color = color(255,random(160,170),random(59,67));
@@ -91,8 +91,8 @@ function endGame() {
         WinningEmberJellyOfVictory.scale = random(1,2);
         WinningEmberJellyOfVictory.life = random(60,100);
         WinningEmberJellyOfVictory.drag.x = 0.001;
-        WinningEmberJellyOfVictory.vel.x += random(0.3,-0.3)
-        WinningEmberJellyOfVictory.vel.y -= random(0.01,0.3)
+        WinningEmberJellyOfVictory.vel.x += random(0.3,-0.3);
+        WinningEmberJellyOfVictory.vel.y -= random(0.07,0.3);
         WinningEmberJellyOfVictory.opacity = 0.5;
         WinningEmberJellyOfVictory.overlaps(allSprites);
     }

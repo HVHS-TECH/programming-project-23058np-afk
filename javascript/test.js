@@ -6,9 +6,9 @@ function setup() {
 
     player = new Group();
     player.strokeWeight = 4;
-    player.drag = 24;
-    player.moveSpeed = 16;
-    player.charge = 999
+    player.drag = 15;
+    player.moveSpeed = 12;
+    player.charge = 5
     
 
     player1 = new player.Sprite(450,450,25,25,'d');
@@ -42,8 +42,13 @@ function setup() {
 
     
 } 
-
+player2.overlap(laser1,chant)
+    function chant() {
+        player2.remove
+        
+    }
 function draw() {
+    
     background(230,230,230);
     text(`Player Speed: ${player1.moveSpeed}`,50,50)
     text(`Charge: ${player1.charge}`,50,60);    
@@ -51,26 +56,26 @@ function draw() {
         laserPointerP1.x = player1.x;
         laserPointerP1.y = player1.y; 
         
-        if (kb.pressing(".")) { 
+        if (kb.pressing(";")) { 
         laserPointerP1.rotationSpeed = 0.6 * laserPointerP1.rotationDirection;
         } else {
         laserPointerP1.rotationSpeed = 9 * laserPointerP1.rotationDirection;
         }  
-        if (kb.released("."))
+        if (kb.released(";"))
             laserPointerP1 .rotationDirection *= -1
     }
     function p1reCharge () {
         if (round(millis()/300 % 2)  == 1) {
-        if (key == 1) {
+        if (i == 1) {
             console.log("charge");
             if (player1.charge < 5) {
                 player1.charge += 1;
             }
-            key = 0;
+            i = 0;
         }
         
     } else {
-        key = 1;
+        i = 1;
     }
     }
     p1reCharge();
@@ -89,7 +94,7 @@ function keyPressed() {
         laser1.rotation = laserPointerP1.rotation;  
     }
 }
-    if (player1.charge != 0) {
+    if (player1.charge != 0 && !kb.pressing(";")) {
         if (kb.presses("arrowLeft")) {
             player1.vel.x = -player1.moveSpeed;
             p1ChargeDown();
@@ -106,6 +111,8 @@ function keyPressed() {
             player1.vel.y = player1.moveSpeed;
             p1ChargeDown();
         }
+    }
+    if (player1.charge !=0) {    
         if (kb.presses("/")) {
             p1ChargeDown();
             fire();
