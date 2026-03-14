@@ -23,7 +23,7 @@ function setup() {
         function createStartButton() {
             startButton = new Sprite(width/2,height/2,100*1.61,100,'s');
             startButton.color = ("white");
-            startButton.text = ("Start Game");
+            startButton.text = ("Press space\n to start");
             startButton.overlaps(allSprites);
         }
 
@@ -135,9 +135,12 @@ function draw() {
         }
     } else {
         background("rgb(0, 0, 0)");
-        if (startButton.mouse.pressed()) {
+        if (gameStarted != true) {
+            if (startButton.mouse.pressed() || kb.pressed("space")) {
             startGame();
+            }
         }
+        
         if (controlButton.mouse.pressed()) {
             function showControl() {
                 controlButton.scale = 3;
