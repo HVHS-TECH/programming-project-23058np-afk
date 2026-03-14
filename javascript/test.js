@@ -1,14 +1,15 @@
+
 function setup() {
     createCanvas(500,500);
     frameRate(60);
     allSprites.strokeWeight = 0
-    allSprites.overlaps(allSprites);
+    
 
     player = new Group();
     player.strokeWeight = 4;
     player.drag = 15;
     player.moveSpeed = 12;
-    player.charge = 5
+    player.charge = 50
     
 
     player1 = new player.Sprite(450,450,25,25,'d');
@@ -21,15 +22,20 @@ function setup() {
     
     laser = new Group();
     laser.life = 40
-    laser.overlaps(allSprites)
+    laser.overlaps(allSprites);
+
+    laserTracer = new Group();
+    laserTracer.overlaps(allSprites);
+    laserTracer.life = 10;
+    
 
     laserPointer = new Group();
     laserPointer.overlaps(allSprites);
-    laserPointer.rotationDirection = 1
+    laserPointer.rotationDirection = 1;
 
-    laserPointerP1 = new laserPointer.Sprite(player1.x,player1.y,12,'triangle',);
-    laserPointerP1.color = ("red");
-    laserPointerP1.offset.y = -17;
+    laserpointer1 = new laserPointer.Sprite(player1.x,player1.y,12,'triangle',);
+    laserpointer1.color = ("red");
+    laserpointer1.offset.y = -17;
 
 
     wall = new Group();
@@ -42,32 +48,31 @@ function setup() {
 
     
 } 
-player2.overlap(laser1,chant)
-    function chant() {
-        player2.remove
-        
+function hit(playerhit) {
+    if (playerhit == 2) {
+        console.log("player 2 hit")
     }
-function draw() {
     
+}
+function draw() {
     background(230,230,230);
-    text(`Player Speed: ${player1.moveSpeed}`,50,50)
     text(`Charge: ${player1.charge}`,50,60);    
-    function pointerVisuals() {
-        laserPointerP1.x = player1.x;
-        laserPointerP1.y = player1.y; 
-        
+ 
+    function p1PointerVisuals() {
+        laserpointer1.x = player1.x;
+        laserpointer1.y = player1.y; 
         if (kb.pressing(";")) { 
-        laserPointerP1.rotationSpeed = 0.6 * laserPointerP1.rotationDirection;
+        laserpointer1.rotationSpeed = 0.6 * laserpointer1.rotationDirection;
         } else {
-        laserPointerP1.rotationSpeed = 9 * laserPointerP1.rotationDirection;
+        laserpointer1.rotationSpeed = 9 * laserpointer1.rotationDirection;
         }  
         if (kb.released(";"))
-            laserPointerP1 .rotationDirection *= -1
+            laserpointer1 .rotationDirection *= -1
     }
     function p1reCharge () {
         if (round(millis()/300 % 2)  == 1) {
         if (i == 1) {
-            console.log("charge");
+            
             if (player1.charge < 5) {
                 player1.charge += 1;
             }
@@ -79,21 +84,27 @@ function draw() {
     }
     }
     p1reCharge();
-    pointerVisuals ();
+    p1PointerVisuals ();
 
+}
+function fire(playerFireing) {
+    laser1 = new laser.Sprite(player1.x,player1.y,12,710,'k');
+        laser1.offset.y = -192.5;
+        laser1.rotation = laserpointer1.rotation;  
+    if (player1.charge != 0) {   
+    }
+}
+function fireTracer(playerFireing) {
+    laserTracer1 = new laserTracer.Sprite(player1.x,player1.y,7,105,'k')
+    laserTracer1.rotation = laserpointer1.rotation;
+    laserTracer1.direction = laserpointer1.rotation - 90;
+    laserTracer1.speed = 80;
 }
 
 function keyPressed() {
     function p1ChargeDown() {
     player1.charge -= 1;
     }
-    function fire() {
-    if (player1.charge != 0) {
-        laser1 = new laser.Sprite(player1.x,player1.y,12,710,'k');
-        laser1.offset.y = -192.5;
-        laser1.rotation = laserPointerP1.rotation;  
-    }
-}
     if (player1.charge != 0 && !kb.pressing(";")) {
         if (kb.presses("arrowLeft")) {
             player1.vel.x = -player1.moveSpeed;
@@ -112,10 +123,12 @@ function keyPressed() {
             p1ChargeDown();
         }
     }
-    if (player1.charge !=0) {    
+    
+    if (player1.charge != 0 ) {    
         if (kb.presses("/")) {
+            fireTracer();
             p1ChargeDown();
-            fire();
+            
         }
     
     }
