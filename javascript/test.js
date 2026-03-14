@@ -1,18 +1,19 @@
 
 function setup() {
-    createCanvas(500,500);
+    createCanvas(700,500);
     frameRate(60);
+    textSize(14);
     allSprites.strokeWeight = 0
-    allSprites.overlap(allSprites);
     
 
     player = new Group();
     player.strokeWeight = 4;
     player.drag = 15;
     player.moveSpeed = 12;
-    player.charge = 5;
+    player.charge = 500;
     player.health = 3;
     player.dead = false;
+    player.overlaps(player);
     
     laser = new Group();
     laser.life = 15;
@@ -28,7 +29,7 @@ function setup() {
     laserPointer.rotationDirection = 1;
 
     function createP1() {
-        player1 = new player.Sprite(450,450,25,25,'d');
+        player1 = new player.Sprite(550,450,25,25,'d');
         player1.color =('red')
         player1.stroke = color(190,50,50);
 
@@ -38,14 +39,14 @@ function setup() {
     }
     
     function createP2() {
-        player2 = new player.Sprite(50,50,25,25,'d');
+        player2 = new player.Sprite(155,50,25,25,'d');
         player2.color =('blue')
         player2.stroke = color(24,18,222);
 
         P2LaserPointer = new laserPointer.Sprite(player2.x,player2.y,12,'triangle',);
         P2LaserPointer.color = ("blue");
         P2LaserPointer.offset.y = -17;
-        P2LaserPointer.rotationDirection = -1;
+        
         P2LaserPointer.rotation += 180;//for symmetry
 
     }
@@ -53,10 +54,11 @@ function setup() {
     
     function createWalls() {
         wall = new Group();
-        wall.opacity = 0;
+        wall.opacity = 0.1;
+        wall.color = ("black")
 
-        westWall = new wall.Sprite(-5,height/2,5,500,'k');
-        eastWall = new wall.Sprite(505,height/2,5,500,'k');
+        westWall = new wall.Sprite(105,height/2,5,500,'k');
+        eastWall = new wall.Sprite(600,height/2,5,500,'k');
         southWall = new wall.Sprite(width/2,505,500,5,'k');
         northWall = new wall.Sprite(width/2,-5,500,5,'k'); //teese are invisible barriers
     }
@@ -67,8 +69,11 @@ function setup() {
 
 function draw() {
     background(230,230,230);
-    text(`Charge: ${player1.charge}`,50,60);    
-    text(`health ${player2.health}`,50,70)
+    
+    text(`P1 Charge: ${player1.charge}`,5,60);    
+    text(`P1 Health: ${player1.health}`,5,80)
+    text(`P2 Charge: ${player2.charge}`,600,60);    
+    text(`P2 Health: ${player2.health}`,600,80)
     if (frameCount % 40  == 1) {
         P1Laser = new laser.Sprite(width+50,player1.y,12,710,'k');
         P2Laser = new laser.Sprite(width+50,player1.y,12,710,'k');
@@ -144,9 +149,16 @@ function checkForAWin() {
         P2LaserPointer.remove();
     }
 }
+
 function hit(playerHit) {
     if (playerHit == 1) {
         player1.health -= 1;
+        player1.text = ("owch");
+        function unOwch() {
+            player1.text = ("");
+        }     
+        setTimeout(unOwch,500)
+
         
     }
     if (playerHit == 2) {
@@ -214,12 +226,12 @@ function keyPressed() {
         }
     }
     
-    if (player1.charge != 0 ) {    
-        if (kb.presses("/")) {
-            fireTracer(1);
-            chargeDown(1);
+        if (player1.charge != 0 ) {    
+            if (kb.presses("/")) {
+                fireTracer(1);
+                chargeDown(1);
+            }
         }
-    }
     }
     function P2Controls() {
         if (player2.charge != 0 && !kb.pressing("x")) {
