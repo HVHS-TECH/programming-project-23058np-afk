@@ -1,93 +1,18 @@
 
 function setup() {
     createCanvas(500,500)
+    textSize(24);
+    fill(255,255,255);
     gameStarted = false;
-    startButton = new Group();
-
     i = 0;
-    u=0;
-
-    
-    
-   
-
+    u = 0;//arbitrary values! What do they do???
 } 
-function startGame() {
-        gameStarted = true;
-        resizeCanvas(700,500);
-        frameRate(60);
-        textSize(14);
-        setupGroups();
-        createP1();
-        createP2();
-        createWalls();
 
-    }
-    
-    function setupGroups() {
-        allSprites.strokeWeight = 0
-        player = new Group();
-        player.strokeWeight = 4;
-        player.drag = 15;
-        player.moveSpeed = 12;
-        player.charge = 5;
-        player.health = 3;
-        player.dead = false;
-        player.overlaps(player);
-        
-        laser = new Group();
-        // these two cannot go anywhere else. because i said so.
-        P1Laser = new laser.Sprite(width+50,0,12,710,'k');
-        P2Laser = new laser.Sprite(width+50,0,12,710,'k');
-        laser.life = 15;
-        laser.overlaps(allSprites);
-        
-        laserTracer = new Group();
-        laserTracer.life = 10;
-        laserTracer.speed = 104.9;
-        laserTracer.opacity = 1;
-        laserTracer.overlaps(allSprites);
-
-        laserPointer = new Group();
-        laserPointer.rotationDirection = 1;
-        laserPointer.opacity = 0.5;
-        laserPointer.overlaps(allSprites);
-    }
- 
-    function createP1() {
-        player1 = new player.Sprite(155,50,25,25,'d');
-        player1.color =('red')
-        player1.stroke = color(190,50,50);
-
-        P1LaserPointer = new laserPointer.Sprite(player1.x,player1.y,12,'triangle');
-        P1LaserPointer.color = ("red");
-        P1LaserPointer.offset.y = -17;
-    }
-    
-    function createP2() {
-        player2 = new player.Sprite(550,450,25,25,'d');
-        player2.color =('blue')
-        player2.stroke = color(24,18,222);
-
-        P2LaserPointer = new laserPointer.Sprite(player2.x,player2.y,12,'triangle',);
-        P2LaserPointer.color = ("blue");
-        P2LaserPointer.offset.y = -17;
-        P2LaserPointer.rotation += 180;//for symmetry in relation to the other pointer
-    }
-    
-    function createWalls() {
-        wall = new Group();
-        wall.opacity = 0.1;
-        wall.color = ("black")
-
-        westWall = new wall.Sprite(105,height/2,5,500,'k');
-        eastWall = new wall.Sprite(600,height/2,5,500,'k');
-        southWall = new wall.Sprite(width/2,505,500,5,'k');
-        northWall = new wall.Sprite(width/2,-5,500,5,'k'); //teese are invisible barriers
-    }
 function draw() {
     if (gameStarted == true) {
         background(230,230,230);
+        fill(0,0,0);
+        textSize(16);
         if (player1.overlaps(P2Laser)) {
             hit(1)
         } 
@@ -101,23 +26,11 @@ function draw() {
         showPlayerStats();
     } else {
         background(0,0,0);
-        textSize(24);
-        fill(255,255,255);
         text("press space to start",250,250);
-        secsSinceStart = millis()/1000;
-        if (secsSinceStart > 1) {
-            startButton.opacity += 0.05;
-        }
         if (kb.pressed("space")) {
             startGame();
         }
     }
-}
-function showPlayerStats() {
-    text(`P1 Charge: ${player1.charge}`,5,60);    
-    text(`P1 Health: ${player1.health}`,5,80);
-    text(`P2 Charge: ${player2.charge}`,600,60);    
-    text(`P2 Health: ${player2.health}`,600,80);
 }
 
 function keyPressed() {
@@ -147,41 +60,115 @@ function keyPressed() {
                 chargeDown(1);
             }
         }
-    }
-    function P2Controls() {
-        if (player2.charge != 0 && !kb.pressing(";")) {
-            if (kb.presses("arrowLeft")) {
-                player2.vel.x = -player2.moveSpeed;
-                chargeDown(2);
+        }
+        function P2Controls() {
+            if (player2.charge != 0 && !kb.pressing(";")) {
+                if (kb.presses("arrowLeft")) {
+                    player2.vel.x = -player2.moveSpeed;
+                    chargeDown(2);
+                }
+                if (kb.presses("arrowRight")) {
+                    player2.vel.x = player2.moveSpeed;
+                    chargeDown(2);
+                }
+                if (kb.presses("arrowUp")) {
+                    player2.vel.y = -player2.moveSpeed;
+                    chargeDown(2);
+                }
+                if (kb.presses("arrowDown")) {
+                    player2.vel.y = player2.moveSpeed;
+                    chargeDown(2);
+                }
             }
-            if (kb.presses("arrowRight")) {
-                player2.vel.x = player2.moveSpeed;
-                chargeDown(2);
-            }
-            if (kb.presses("arrowUp")) {
-                player2.vel.y = -player2.moveSpeed;
-                chargeDown(2);
-            }
-            if (kb.presses("arrowDown")) {
-                player2.vel.y = player2.moveSpeed;
-                chargeDown(2);
+            if (player2.charge != 0 ) {    
+                if (kb.presses("/")) {
+                    fireTracer(2);
+                    chargeDown(2);
+                }
             }
         }
-        if (player2.charge != 0 ) {    
-            if (kb.presses("/")) {
-                fireTracer(2);
-                chargeDown(2);
-            }
+        if (player1.dead == false) {
+            P1Controls();
         }
-    }
-    if (player1.dead == false) {
-        P1Controls();
-    }
-    if (player2.dead == false) {
-        P2Controls();
-    }  
+        if (player2.dead == false) {
+            P2Controls();
+        }  
     }
     
+}
+
+function startGame() {
+        gameStarted = true;
+        resizeCanvas(700,500);
+        frameRate(60);
+        textSize(14);
+        setupGroups();
+        createP1();
+        createP2();
+        createWalls();
+
+}
+
+function setupGroups() {
+    allSprites.strokeWeight = 0
+    player = new Group();
+    player.strokeWeight = 4;
+    player.drag = 15;
+    player.moveSpeed = 12;
+    player.charge = 5;
+    player.health = 3;
+    player.dead = false;
+    player.overlaps(player);
+    
+    laser = new Group();
+    // these two cannot go anywhere else. because i said so.
+    P1Laser = new laser.Sprite(width+50,0,12,710,'k');
+    P2Laser = new laser.Sprite(width+50,0,12,710,'k');
+    laser.life = 15;
+    laser.overlaps(allSprites);
+    
+    laserTracer = new Group();
+    laserTracer.life = 10;
+    laserTracer.speed = 104.9;
+    laserTracer.opacity = 1;
+    laserTracer.overlaps(allSprites);
+
+    laserPointer = new Group();
+    laserPointer.rotationDirection = 1;
+    laserPointer.opacity = 0.5;
+    laserPointer.overlaps(allSprites);
+}
+
+function createP1() {
+    player1 = new player.Sprite(155,50,25,25,'d');
+    player1.color =('red')
+    player1.stroke = color(190,50,50);
+
+    P1LaserPointer = new laserPointer.Sprite(player1.x,player1.y,12,'triangle');
+    P1LaserPointer.color = ("red");
+    P1LaserPointer.offset.y = -17;
+}
+
+function createP2() {
+    player2 = new player.Sprite(550,450,25,25,'d');
+    player2.color =('blue')
+    player2.stroke = color(24,18,222);
+
+    P2LaserPointer = new laserPointer.Sprite(player2.x,player2.y,12,'triangle',);
+    P2LaserPointer.color = ("blue");
+    P2LaserPointer.offset.y = -17;
+    P2LaserPointer.rotation += 180;//for symmetry in relation to the other pointer
+}
+
+function createWalls() {
+    wall = new Group();
+    wall.opacity = 0.1;
+    wall.color = ("black")
+
+    westWall = new wall.Sprite(105,height/2,5,500,'k');
+    eastWall = new wall.Sprite(600,height/2,5,500,'k');
+    southWall = new wall.Sprite(width/2,505,500,5,'k');
+    northWall = new wall.Sprite(width/2,-5,500,5,'k'); //teese are invisible barriers
 }
 
 function P1PointerVisuals() {
@@ -206,6 +193,13 @@ function P2PointerVisuals() {
     }  
     if (kb.released(";"))
         P2LaserPointer .rotationDirection *= -1
+}
+
+function showPlayerStats() {
+    text(`P1 Charge: ${player1.charge}`,5,60);    
+    text(`P1 Health: ${player1.health}`,5,80);
+    text(`P2 Charge: ${player2.charge}`,605,60);    
+    text(`P2 Health: ${player2.health}`,605,80);
 }
 
 function P1Recharge() {
@@ -234,19 +228,6 @@ function P2Recharge() {
         }
 }
 
-function checkForAWin() {
-    if (player1.health == 0) {
-        player.dead = true;
-        player1.remove();
-        P1LaserPointer.remove();
-    }
-    if (player2.health == 0) {
-        player2.dead = true;
-        player2.remove();
-        P2LaserPointer.remove();
-    }
-}
-
 function hit(playerHit) {
     if (playerHit == 1) {
         player1.health -= 1;
@@ -267,6 +248,19 @@ function hit(playerHit) {
         setTimeout(unOwch,500)
     }
     checkForAWin();
+}
+
+function checkForAWin() {
+    if (player1.health == 0) {
+        player.dead = true;
+        player1.remove();
+        P1LaserPointer.remove();
+    }
+    if (player2.health == 0) {
+        player2.dead = true;
+        player2.remove();
+        P2LaserPointer.remove();
+    }
 }
 
 function fireTracer(playerFiring) {
