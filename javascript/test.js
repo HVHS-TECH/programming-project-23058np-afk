@@ -2,10 +2,7 @@
 function setup() {
     createCanvas(500,500)
     gameStarted = false;
-    startButton = new Group();
-    startButton = new startButton.Sprite(250,250,150,50);
-    startButton.color = ("white");
-    startButton.opacity = 0;
+  
 
     
     
@@ -30,7 +27,7 @@ function startGame() {
         player.strokeWeight = 4;
         player.drag = 15;
         player.moveSpeed = 12;
-        player.charge = 500;
+        player.charge = 5;
         player.health = 3;
         player.dead = false;
         player.overlaps(player);
