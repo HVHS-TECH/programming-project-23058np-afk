@@ -2,13 +2,18 @@
 function setup() {
     createCanvas(500,500)
     gameStarted = false;
-    startButton = new Sprite(250,250,150,50);
+    startButton = new Group();
+    startButton = new startButton.Sprite(250,250,150,50);
     startButton.color = ("white");
-    
     startButton.opacity = 0;
 
     
-    function startGame() {
+    
+   
+
+} 
+function startGame() {
+        gameStarted = true;
         resizeCanvas(700,500);
         frameRate(60);
         textSize(14);
@@ -79,10 +84,6 @@ function setup() {
         southWall = new wall.Sprite(width/2,505,500,5,'k');
         northWall = new wall.Sprite(width/2,-5,500,5,'k'); //teese are invisible barriers
     }
-   
-
-} 
-
 function draw() {
     if (gameStarted == true) {
         background(230,230,230);
@@ -102,8 +103,9 @@ function draw() {
         secsSinceStart = millis()/1000;
         if (secsSinceStart > 1) {
             startButton.opacity += 0.05;
-            
-
+        }
+        if (kb.pressed("space")) {
+            startGame();
         }
     }
 }
