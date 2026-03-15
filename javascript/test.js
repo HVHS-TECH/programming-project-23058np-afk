@@ -3,9 +3,7 @@ function setup() {
     createCanvas(500,500)
     gameStarted = false;
     startButton = new Group();
-    startButton = new startButton.Sprite(250,250,150,50);
-    startButton.color = ("white");
-    startButton.remove();
+
     i = 0;
     u=0;
 
@@ -103,6 +101,9 @@ function draw() {
         showPlayerStats();
     } else {
         background(0,0,0);
+        textSize(24);
+        fill(255,255,255);
+        text("press space to start",250,250);
         secsSinceStart = millis()/1000;
         if (secsSinceStart > 1) {
             startButton.opacity += 0.05;
