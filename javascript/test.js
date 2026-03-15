@@ -2,7 +2,12 @@
 function setup() {
     createCanvas(500,500)
     gameStarted = false;
-  
+    startButton = new Group();
+    startButton = new startButton.Sprite(250,250,150,50);
+    startButton.color = ("white");
+    startButton.remove();
+    i = 0;
+    u=0;
 
     
     
@@ -18,7 +23,7 @@ function startGame() {
         createP1();
         createP2();
         createWalls();
-        startButton.remove();
+
     }
     
     function setupGroups() {
