@@ -21,6 +21,7 @@ function startGame() {
         createP1();
         createP2();
         createWalls();
+        startButton.remove();
     }
     
     function setupGroups() {
@@ -117,7 +118,8 @@ function showPlayerStats() {
 }
 
 function keyPressed() {
-    function P1Controls() {
+    if (gameStarted == true) {
+      function P1Controls() {
         if (player1.charge != 0 && !kb.pressing("x")) {
             if (kb.presses("a")) {
                 player1.vel.x = -player1.moveSpeed;
@@ -174,7 +176,9 @@ function keyPressed() {
     }
     if (player2.dead == false) {
         P2Controls();
+    }  
     }
+    
 }
 
 function P1PointerVisuals() {
