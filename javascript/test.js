@@ -1,18 +1,27 @@
 
+/*******************************************************/
+// SETUP
+/*******************************************************/
 function setup() {
     createCanvas(500,500)
     textSize(24);
+    textAlign(CENTER);
     fill(255,255,255);
     gameStarted = false;
     i = 0;
     u = 0;//arbitrary values! What do they do???
+    
 } 
 
+/*******************************************************/
+// DRAW
+/*******************************************************/
 function draw() {
     if (gameStarted == true) {
         background(230,230,230);
         fill(0,0,0);
         textSize(16);
+        jelly.height = player1.charge*20
         if (player1.overlaps(P2Laser)) {
             hit(1)
         } 
@@ -33,9 +42,13 @@ function draw() {
     }
 }
 
+/*******************************************************/
+//INPUT
+/*******************************************************/
 function keyPressed() {
     if (gameStarted == true) {
-      function P1Controls() {
+    //P1 CONTROLS
+    function P1Controls() {
         if (player1.charge != 0 && !kb.pressing("x")) {
             if (kb.presses("a")) {
                 player1.vel.x = -player1.moveSpeed;
@@ -60,56 +73,64 @@ function keyPressed() {
                 chargeDown(1);
             }
         }
-        }
-        function P2Controls() {
-            if (player2.charge != 0 && !kb.pressing(";")) {
-                if (kb.presses("arrowLeft")) {
-                    player2.vel.x = -player2.moveSpeed;
-                    chargeDown(2);
-                }
-                if (kb.presses("arrowRight")) {
-                    player2.vel.x = player2.moveSpeed;
-                    chargeDown(2);
-                }
-                if (kb.presses("arrowUp")) {
-                    player2.vel.y = -player2.moveSpeed;
-                    chargeDown(2);
-                }
-                if (kb.presses("arrowDown")) {
-                    player2.vel.y = player2.moveSpeed;
-                    chargeDown(2);
-                }
+    }
+    //P2 INPUT
+    function P2Controls() {
+        if (player2.charge != 0 && !kb.pressing(";")) {
+            if (kb.presses("arrowLeft")) {
+                player2.vel.x = -player2.moveSpeed;
+                chargeDown(2);
             }
-            if (player2.charge != 0 ) {    
-                if (kb.presses("/")) {
-                    fireTracer(2);
-                    chargeDown(2);
-                }
+            if (kb.presses("arrowRight")) {
+                player2.vel.x = player2.moveSpeed;
+                chargeDown(2);
+            }
+            if (kb.presses("arrowUp")) {
+                player2.vel.y = -player2.moveSpeed;
+                chargeDown(2);
+            }
+            if (kb.presses("arrowDown")) {
+                player2.vel.y = player2.moveSpeed;
+                chargeDown(2);
             }
         }
-        if (player1.dead == false) {
-            P1Controls();
+        if (player2.charge != 0 ) {    
+            if (kb.presses("/")) {
+                fireTracer(2);
+                chargeDown(2);
+            }
         }
-        if (player2.dead == false) {
-            P2Controls();
-        }  
+    }
+    if (player1.dead == false) {
+        P1Controls();
+    }
+    if (player2.dead == false) {
+        P2Controls();
+    }  
     }
     
 }
+/*******************************************************/
+//
+/*******************************************************/
 
+/*******************************************************/
+//START GAME
+/*******************************************************/
 function startGame() {
         gameStarted = true;
         resizeCanvas(700,500);
         frameRate(60);
         textSize(14);
-        setupGroups();
-        createP1();
-        createP2();
+        setupPlayers();
         createWalls();
-
+        jelly = new Sprite(width/2,height/2,20,player1.charge*20,'n')
+        jelly.color = ("red");
 }
-
-function setupGroups() {
+/*******************************************************/
+//SETUP PLAYERS
+/*******************************************************/
+function setupPlayers() {
     allSprites.strokeWeight = 0
     player = new Group();
     player.strokeWeight = 4;
@@ -121,7 +142,7 @@ function setupGroups() {
     player.overlaps(player);
     
     laser = new Group();
-    // these two cannot go anywhere else. because i said so.
+    // these two cannot go anywhere else. because i said so. (They are reference for the collision script in the draw loop before lasers are shot, and therefore need to have infinite life.)
     P1Laser = new laser.Sprite(width+50,0,12,710,'k');
     P2Laser = new laser.Sprite(width+50,0,12,710,'k');
     laser.life = 15;
@@ -137,28 +158,33 @@ function setupGroups() {
     laserPointer.rotationDirection = 1;
     laserPointer.opacity = 0.5;
     laserPointer.overlaps(allSprites);
+
+    function createP1() {
+        player1 = new player.Sprite(155,50,25,25,'d');
+        player1.color =('red')
+        player1.stroke = color(190,50,50);
+
+        P1LaserPointer = new laserPointer.Sprite(player1.x,player1.y,12,'triangle');
+        P1LaserPointer.color = ("red");
+        P1LaserPointer.offset.y = -17;
+    }
+
+    function createP2() {
+        player2 = new player.Sprite(550,450,25,25,'d');
+        player2.color =('blue')
+        player2.stroke = color(24,18,222);
+
+        P2LaserPointer = new laserPointer.Sprite(player2.x,player2.y,12,'triangle',);
+        P2LaserPointer.color = ("blue");
+        P2LaserPointer.offset.y = -17;
+        P2LaserPointer.rotation += 180;//for symmetry in relation to the other pointer
+    }
+
+    createP1();
+    createP2();
 }
 
-function createP1() {
-    player1 = new player.Sprite(155,50,25,25,'d');
-    player1.color =('red')
-    player1.stroke = color(190,50,50);
 
-    P1LaserPointer = new laserPointer.Sprite(player1.x,player1.y,12,'triangle');
-    P1LaserPointer.color = ("red");
-    P1LaserPointer.offset.y = -17;
-}
-
-function createP2() {
-    player2 = new player.Sprite(550,450,25,25,'d');
-    player2.color =('blue')
-    player2.stroke = color(24,18,222);
-
-    P2LaserPointer = new laserPointer.Sprite(player2.x,player2.y,12,'triangle',);
-    P2LaserPointer.color = ("blue");
-    P2LaserPointer.offset.y = -17;
-    P2LaserPointer.rotation += 180;//for symmetry in relation to the other pointer
-}
 
 function createWalls() {
     wall = new Group();
@@ -196,10 +222,10 @@ function P2PointerVisuals() {
 }
 
 function showPlayerStats() {
-    text(`P1 Charge: ${player1.charge}`,5,60);    
-    text(`P1 Health: ${player1.health}`,5,80);
-    text(`P2 Charge: ${player2.charge}`,605,60);    
-    text(`P2 Health: ${player2.health}`,605,80);
+    text(`P1 Charge: ${player1.charge}`,50,60);    
+    text(`P1 Health: ${player1.health}`,50,80);
+    text(`P2 Charge: ${player2.charge}`,650,60);    
+    text(`P2 Health: ${player2.health}`,650,80);
 }
 
 function P1Recharge() {
