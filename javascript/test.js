@@ -21,7 +21,7 @@ function draw() {
         background(230,230,230);
         fill(0,0,0);
         textSize(16);
-        jelly.height = player1.charge*20
+  
         if (player1.overlaps(P2Laser)) {
             hit(1)
         } 
@@ -118,14 +118,12 @@ function keyPressed() {
 //START GAME
 /*******************************************************/
 function startGame() {
-        gameStarted = true;
-        resizeCanvas(700,500);
-        frameRate(60);
-        textSize(14);
-        setupPlayers();
-        createWalls();
-        jelly = new Sprite(width/2,height/2,20,player1.charge*20,'n')
-        jelly.color = ("red");
+    gameStarted = true;
+    resizeCanvas(700,500);
+    frameRate(60);
+    textSize(14);
+    setupPlayers();
+    createWalls();
 }
 /*******************************************************/
 //SETUP PLAYERS
