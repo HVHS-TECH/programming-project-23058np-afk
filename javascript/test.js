@@ -218,7 +218,7 @@ function P2PointerVisuals() {
     if (kb.released(";"))
         P2LaserPointer .rotationDirection *= -1
 }
-
+    
 function showPlayerStats() {
     text(`P1 Charge: ${player1.charge}`,50,60);    
     text(`P1 Health: ${player1.health}`,50,80);
