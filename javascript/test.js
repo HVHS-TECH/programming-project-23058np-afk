@@ -218,7 +218,7 @@ function P2PointerVisuals() {
     if (kb.released(";"))
         P2LaserPointer .rotationDirection *= -1
 }
-    
+
 function showPlayerStats() {
     text(`P1 Charge: ${player1.charge}`,50,60);    
     text(`P1 Health: ${player1.health}`,50,80);
@@ -227,7 +227,7 @@ function showPlayerStats() {
 }
 
 function P1Recharge() {
-    if (round(millis()/300 % 2)  == 1) {
+    if (round(millis()/600 % 2)  == 1) {
         if (i == 1) {
             if (player1.charge < 5) {
                 player1.charge += 1;
@@ -240,7 +240,7 @@ function P1Recharge() {
 }
 
 function P2Recharge() {
-    if (round(millis()/300 % 2)  == 1) {
+    if (round(millis()/600 % 2)  == 1) {
         if (u == 1) {
             if (player2.charge < 5) {
                 player2.charge += 1;
