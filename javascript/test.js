@@ -2,14 +2,21 @@
 /*******************************************************/
 // SETUP
 /*******************************************************/
+padding = 25
 function setup() {
-    createCanvas(500,500)
-    textSize(24);
-    textAlign(CENTER);
-    fill(255,255,255);
+    createCanvas(windowWidth-padding,windowHeight-padding)
+    gameMessage = "Press Space to Start"
     gameStarted = false;
     i = 0;
     u = 0;//arbitrary values! What do they do???
+
+    /*chargebar1 = new Sprite(width/2,height/2, 40,80);
+    chargebar2 = new Sprite(width/2,height/2, 40,80);
+    chargebar3 = new Sprite(width/2,height/2, 40,80);
+    chargebar4 = new Sprite(width/2,height/2, 40,80);
+    chargebar5 = new Sprite(width/2,height/2, 40,80);
+*/ 
+    
     
 } 
 
@@ -21,13 +28,14 @@ function draw() {
         background(230,230,230);
         fill(0,0,0);
         textSize(16);
-  
+        
         if (player1.overlaps(P2Laser)) {
             hit(1)
         } 
         if (player2.overlaps(P1Laser)) {
             hit(2)
         } 
+
         P1Recharge();
         P2Recharge();
         P1PointerVisuals();
@@ -35,7 +43,11 @@ function draw() {
         showPlayerStats();
     } else {
         background(0,0,0);
-        text("press space to start",250,250);
+        fill(255,255,255);
+        textSize(24);
+        textAlign(CENTER);
+
+        text(gameMessage,width/2,height/2);
         if (kb.pressed("space")) {
             startGame();
         }
@@ -110,21 +122,24 @@ function keyPressed() {
     }
     
 }
-/*******************************************************/
-//
-/*******************************************************/
 
 /*******************************************************/
-//START GAME
+//START GAME and ENG GAME
 /*******************************************************/
 function startGame() {
     gameStarted = true;
-    resizeCanvas(700,500);
+    resizeCanvas(windowWidth-padding,windowHeight-padding);
     frameRate(60);
     textSize(14);
     setupPlayers();
     createWalls();
 }
+function endGame(msg) {
+    allSprites.remove();
+    gameStarted = false;
+    gameMessage = msg;
+}
+
 /*******************************************************/
 //SETUP PLAYERS
 /*******************************************************/
@@ -132,9 +147,9 @@ function setupPlayers() {
     allSprites.strokeWeight = 0
     player = new Group();
     player.strokeWeight = 4;
-    player.drag = 15;
-    player.moveSpeed = 12;
-    player.charge = 5;
+    player.drag = 5;
+    player.moveSpeed = 15;
+    player.charge = 50;
     player.health = 3;
     player.dead = false;
     player.overlaps(player);
@@ -158,7 +173,7 @@ function setupPlayers() {
     laserPointer.overlaps(allSprites);
 
     function createP1() {
-        player1 = new player.Sprite(155,50,25,25,'d');
+        player1 = new player.Sprite(width*0.26,height*0.05,25,25,'d');
         player1.color =('red')
         player1.stroke = color(190,50,50);
 
@@ -168,7 +183,7 @@ function setupPlayers() {
     }
 
     function createP2() {
-        player2 = new player.Sprite(550,450,25,25,'d');
+        player2 = new player.Sprite(width*0.74,height*0.95,25,25,'d');
         player2.color =('blue')
         player2.stroke = color(24,18,222);
 
@@ -182,26 +197,24 @@ function setupPlayers() {
     createP2();
 }
 
-
-
 function createWalls() {
     wall = new Group();
     wall.opacity = 0.1;
     wall.color = ("black")
 
-    westWall = new wall.Sprite(105,height/2,5,500,'k');
-    eastWall = new wall.Sprite(600,height/2,5,500,'k');
-    southWall = new wall.Sprite(width/2,505,500,5,'k');
-    northWall = new wall.Sprite(width/2,-5,500,5,'k'); //teese are invisible barriers
+    westWall = new wall.Sprite(width*0.23,height/2,5,height,'k');
+    eastWall = new wall.Sprite(width*0.77,height/2,5,height,'k');
+    southWall = new wall.Sprite(width/2,height+2.5,width,5,'k');
+    northWall = new wall.Sprite(width/2,-2.5,width,5,'k');
 }
 
 function P1PointerVisuals() {
     P1LaserPointer.x = player1.x;
     P1LaserPointer.y = player1.y; 
     if (kb.pressing("x")) { 
-    P1LaserPointer.rotationSpeed = 0.6 * P1LaserPointer.rotationDirection;
+    P1LaserPointer.rotationSpeed = 0.4 * P1LaserPointer.rotationDirection;
     } else {
-    P1LaserPointer.rotationSpeed = 9 * P1LaserPointer.rotationDirection;
+    P1LaserPointer.rotationSpeed = 6 * P1LaserPointer.rotationDirection;
     }  
     if (kb.released("x"))
         P1LaserPointer .rotationDirection *= -1
@@ -211,9 +224,9 @@ function P2PointerVisuals() {
     P2LaserPointer.x = player2.x;
     P2LaserPointer.y = player2.y; 
     if (kb.pressing(";")) { 
-    P2LaserPointer.rotationSpeed = 0.6 * P2LaserPointer.rotationDirection;
+    P2LaserPointer.rotationSpeed = 0.4 * P2LaserPointer.rotationDirection;
     } else {
-    P2LaserPointer.rotationSpeed = 9 * P2LaserPointer.rotationDirection;
+    P2LaserPointer.rotationSpeed = 6 * P2LaserPointer.rotationDirection;
     }  
     if (kb.released(";"))
         P2LaserPointer .rotationDirection *= -1
@@ -227,7 +240,7 @@ function showPlayerStats() {
 }
 
 function P1Recharge() {
-    if (round(millis()/600 % 2)  == 1) {
+    if (round(millis()/500 % 2)  == 1) {
         if (i == 1) {
             if (player1.charge < 5) {
                 player1.charge += 1;
@@ -240,7 +253,7 @@ function P1Recharge() {
 }
 
 function P2Recharge() {
-    if (round(millis()/600 % 2)  == 1) {
+    if (round(millis()/500 % 2)  == 1) {
         if (u == 1) {
             if (player2.charge < 5) {
                 player2.charge += 1;
@@ -279,11 +292,13 @@ function checkForAWin() {
         player.dead = true;
         player1.remove();
         P1LaserPointer.remove();
+        endGame("Player 2 wins. \n Press Space to restart.");
     }
     if (player2.health == 0) {
         player2.dead = true;
         player2.remove();
         P2LaserPointer.remove();
+        endGame("Player 1 wins. \n Press Space to restart.");
     }
 }
 
