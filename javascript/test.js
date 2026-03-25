@@ -127,14 +127,16 @@ function keyPressed() {
 //START GAME and ENG GAME
 /*******************************************************/
 function startGame() {
+    
     gameStarted = true;
-    resizeCanvas(windowWidth-padding,windowHeight-padding);
     frameRate(60);
     textSize(14);
     setupPlayers();
     createWalls();
+    laser.opacity = 1;
 }
 function endGame(msg) {
+    laser.opacity = 0;
     allSprites.remove();
     gameStarted = false;
     gameMessage = msg;
@@ -147,9 +149,11 @@ function setupPlayers() {
     allSprites.strokeWeight = 0
     player = new Group();
     player.strokeWeight = 4;
-    player.drag = 5;
+    player.drag = 15;
     player.moveSpeed = 15;
     player.charge = 50;
+    player.layer = 1;
+    
     player.health = 3;
     player.dead = false;
     player.overlaps(player);
@@ -158,19 +162,22 @@ function setupPlayers() {
     // these two cannot go anywhere else. because i said so. (They are reference for the collision script in the draw loop before lasers are shot, and therefore need to have infinite life.)
     P1Laser = new laser.Sprite(width+50,0,12,710,'k');
     P2Laser = new laser.Sprite(width+50,0,12,710,'k');
+    laser.layer = 0;
     laser.life = 15;
     laser.overlaps(allSprites);
     
     laserTracer = new Group();
     laserTracer.life = 10;
-    laserTracer.speed = 104.9;
-    laserTracer.opacity = 1;
+    laserTracer.speed = 400;
+    laserTracer.opacity = 0.9;
     laserTracer.overlaps(allSprites);
+    laserTracer.layer =0;
 
     laserPointer = new Group();
     laserPointer.rotationDirection = 1;
     laserPointer.opacity = 0.5;
     laserPointer.overlaps(allSprites);
+    laserPointer.layer = 1;
 
     function createP1() {
         player1 = new player.Sprite(width*0.26,height*0.05,25,25,'d');
@@ -214,7 +221,7 @@ function P1PointerVisuals() {
     if (kb.pressing("x")) { 
     P1LaserPointer.rotationSpeed = 0.4 * P1LaserPointer.rotationDirection;
     } else {
-    P1LaserPointer.rotationSpeed = 6 * P1LaserPointer.rotationDirection;
+    P1LaserPointer.rotationSpeed = 7.5 * P1LaserPointer.rotationDirection;
     }  
     if (kb.released("x"))
         P1LaserPointer .rotationDirection *= -1
@@ -226,7 +233,7 @@ function P2PointerVisuals() {
     if (kb.pressing(";")) { 
     P2LaserPointer.rotationSpeed = 0.4 * P2LaserPointer.rotationDirection;
     } else {
-    P2LaserPointer.rotationSpeed = 6 * P2LaserPointer.rotationDirection;
+    P2LaserPointer.rotationSpeed = 7.5 * P2LaserPointer.rotationDirection;
     }  
     if (kb.released(";"))
         P2LaserPointer .rotationDirection *= -1
@@ -240,7 +247,7 @@ function showPlayerStats() {
 }
 
 function P1Recharge() {
-    if (round(millis()/500 % 2)  == 1) {
+    if (round(millis()/450 % 2)  == 1) {
         if (i == 1) {
             if (player1.charge < 5) {
                 player1.charge += 1;
@@ -253,7 +260,7 @@ function P1Recharge() {
 }
 
 function P2Recharge() {
-    if (round(millis()/500 % 2)  == 1) {
+    if (round(millis()/400 % 2)  == 1) {
         if (u == 1) {
             if (player2.charge < 5) {
                 player2.charge += 1;
@@ -304,7 +311,7 @@ function checkForAWin() {
 
 function fireTracer(playerFiring) {
     if (playerFiring == 1) {
-        P1tracer = new laserTracer.Sprite(player1.x,player1.y,7,105,'k')
+        P1tracer = new laserTracer.Sprite(player1.x,player1.y,7,140,'k')
         P1tracer.rotation = P1LaserPointer.rotation;
         P1tracer.direction = P1LaserPointer.rotation - 90;
         P1tracer.color = ("red");
@@ -313,7 +320,7 @@ function fireTracer(playerFiring) {
         setTimeout (fireLaser,350,P1tracer.rotation,posX,posY,1);
     }
     if (playerFiring == 2) {
-        P2tracer = new laserTracer.Sprite(player2.x,player2.y,7,105,'k')
+        P2tracer = new laserTracer.Sprite(player2.x,player2.y,7,140,'k')
         P2tracer.rotation = P2LaserPointer.rotation;
         P2tracer.direction = P2LaserPointer.rotation - 90;
         P2tracer.color = ("blue");
@@ -325,14 +332,14 @@ function fireTracer(playerFiring) {
 
 function fireLaser(rotation,posX,posY,playerFiring) {
     if (playerFiring == 1) {
-        P1Laser = new laser.Sprite(posX,posY,12,710,'k');
-        P1Laser.offset.y = -192.5;
+        P1Laser = new laser.Sprite(posX,posY,12,2000,'k');
+        P1Laser.offset.y = -515;
         P1Laser.rotation = rotation;
         P1Laser.color = ("red");
     }
     if (playerFiring == 2) {
-        P2Laser = new laser.Sprite(posX,posY,12,710,'k');
-        P2Laser.offset.y = -192.5;
+        P2Laser = new laser.Sprite(posX,posY,12,2000,'k');
+        P2Laser.offset.y = -515;
         P2Laser.rotation = rotation;  
         P2Laser.color = ("blue");
     }
