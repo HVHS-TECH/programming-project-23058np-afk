@@ -35,23 +35,79 @@ function draw() {
         if (player2.overlaps(P1Laser)) {
             hit(2)
         } 
-
+        playerDeathSparks.opacity -= 0.1
         P1Recharge();
         P2Recharge();
         P1PointerVisuals();
         P2PointerVisuals();
         showPlayerStats();
+        if (millis())
     } else {
         background(0,0,0);
         fill(255,255,255);
         textSize(24);
         textAlign(CENTER);
-
-        text(gameMessage,width/2,height/2);
+        
+        text(gameMessage,width/2,height/2); // gameMessage is set when player 1 or 2 dies and at the start of the game in setup(). GameMessage shows who won.
         if (kb.pressed("space")) {
             startGame();
         }
     }
+}
+function P1PointerVisuals() {
+    P1LaserPointer.x = player1.x;
+    P1LaserPointer.y = player1.y; 
+    if (kb.pressing("x")) { 
+    P1LaserPointer.rotationSpeed = 0.4 * P1LaserPointer.rotationDirection;
+    } else {
+    P1LaserPointer.rotationSpeed = 7.5 * P1LaserPointer.rotationDirection;
+    }  
+    if (kb.released("x"))
+        P1LaserPointer .rotationDirection *= -1
+}
+
+function P2PointerVisuals() {
+    P2LaserPointer.x = player2.x;
+    P2LaserPointer.y = player2.y; 
+    if (kb.pressing(";")) { 
+    P2LaserPointer.rotationSpeed = 0.4 * P2LaserPointer.rotationDirection;
+    } else {
+    P2LaserPointer.rotationSpeed = 7.5 * P2LaserPointer.rotationDirection;
+    }  
+    if (kb.released(";"))
+        P2LaserPointer .rotationDirection *= -1
+}
+function P1Recharge() {
+    if (round(millis()/450 % 2)  == 1) {
+        if (i == 1) {
+            if (player1.charge < 5) {
+                player1.charge += 1;
+            }
+            i = 0;
+        } 
+        } else {
+            i = 1;
+        }
+}
+
+function P2Recharge() {
+    if (round(millis()/400 % 2)  == 1) {
+        if (u == 1) {
+            if (player2.charge < 5) {
+                player2.charge += 1;
+            }
+            u = 0;
+        } 
+        } else {
+            u = 1;
+        }
+}
+
+function showPlayerStats() {
+    text(`P1 Charge: ${player1.charge}`,50,60);    
+    text(`P1 Health: ${player1.health}`,50,80);
+    text(`P2 Charge: ${player2.charge}`,650,60);    
+    text(`P2 Health: ${player2.health}`,650,80);
 }
 
 /*******************************************************/
@@ -124,7 +180,7 @@ function keyPressed() {
 }
 
 /*******************************************************/
-//START GAME and ENG GAME
+//START GAME 
 /*******************************************************/
 function startGame() {
     
@@ -134,12 +190,6 @@ function startGame() {
     setupPlayers();
     createWalls();
     laser.opacity = 1;
-}
-function endGame(msg) {
-    laser.opacity = 0;
-    allSprites.remove();
-    gameStarted = false;
-    gameMessage = msg;
 }
 
 /*******************************************************/
@@ -153,10 +203,12 @@ function setupPlayers() {
     player.moveSpeed = 15;
     player.charge = 50;
     player.layer = 1;
-    
     player.health = 3;
     player.dead = false;
     player.overlaps(player);
+
+    playerDeathSparks = new Group();
+    playerDeathSparks.speed = 0.1
     
     laser = new Group();
     // these two cannot go anywhere else. because i said so. (They are reference for the collision script in the draw loop before lasers are shot, and therefore need to have infinite life.)
@@ -215,61 +267,11 @@ function createWalls() {
     northWall = new wall.Sprite(width/2,-2.5,width,5,'k');
 }
 
-function P1PointerVisuals() {
-    P1LaserPointer.x = player1.x;
-    P1LaserPointer.y = player1.y; 
-    if (kb.pressing("x")) { 
-    P1LaserPointer.rotationSpeed = 0.4 * P1LaserPointer.rotationDirection;
-    } else {
-    P1LaserPointer.rotationSpeed = 7.5 * P1LaserPointer.rotationDirection;
-    }  
-    if (kb.released("x"))
-        P1LaserPointer .rotationDirection *= -1
-}
-
-function P2PointerVisuals() {
-    P2LaserPointer.x = player2.x;
-    P2LaserPointer.y = player2.y; 
-    if (kb.pressing(";")) { 
-    P2LaserPointer.rotationSpeed = 0.4 * P2LaserPointer.rotationDirection;
-    } else {
-    P2LaserPointer.rotationSpeed = 7.5 * P2LaserPointer.rotationDirection;
-    }  
-    if (kb.released(";"))
-        P2LaserPointer .rotationDirection *= -1
-}
-
-function showPlayerStats() {
-    text(`P1 Charge: ${player1.charge}`,50,60);    
-    text(`P1 Health: ${player1.health}`,50,80);
-    text(`P2 Charge: ${player2.charge}`,650,60);    
-    text(`P2 Health: ${player2.health}`,650,80);
-}
-
-function P1Recharge() {
-    if (round(millis()/450 % 2)  == 1) {
-        if (i == 1) {
-            if (player1.charge < 5) {
-                player1.charge += 1;
-            }
-            i = 0;
-        } 
-        } else {
-            i = 1;
-        }
-}
-
-function P2Recharge() {
-    if (round(millis()/400 % 2)  == 1) {
-        if (u == 1) {
-            if (player2.charge < 5) {
-                player2.charge += 1;
-            }
-            u = 0;
-        } 
-        } else {
-            u = 1;
-        }
+function endGame(msg) {
+    laser.opacity = 0;
+    allSprites.remove();
+    gameStarted = false;
+    gameMessage = msg; 
 }
 
 function hit(playerHit) {
@@ -280,8 +282,6 @@ function hit(playerHit) {
             player1.text = ("");
         }     
         setTimeout(unOwch,500)
-
-        
     }
     if (playerHit == 2) {
         player2.health -= 1;
@@ -291,21 +291,33 @@ function hit(playerHit) {
         }     
         setTimeout(unOwch,500)
     }
-    checkForAWin();
+    checkPlayerLife();
 }
 
-function checkForAWin() {
+function checkPlayerLife() {
     if (player1.health == 0) {
         player.dead = true;
+        for (i = 0; i < 37; i++) {
+            P1DeathSparks = new playerDeathSparks.Sprite(player1.x,player1.y, 5,'n');
+            P1DeathSparks.direction = i * 10;
+            P1DeathSparks.speed = random(4.3,5.7)
+            P1DeathSparks.color = ("red");
+        }
         player1.remove();
         P1LaserPointer.remove();
-        endGame("Player 2 wins. \n Press Space to restart.");
+        setTimeout(endGame,1000,"Player 2 wins. \n Press Space to restart.");
     }
     if (player2.health == 0) {
         player2.dead = true;
+        for (i = 0; i < 37; i++) {
+            P2DeathSparks = new playerDeathSparks.Sprite(player2.x,player2.y, 5,'n');
+            P2DeathSparks.direction = i * 10;
+            P2DeathSparks.speed = random(4.3,5.7)
+            P2DeathSparks.color = ("blue");
+        }
         player2.remove();
         P2LaserPointer.remove();
-        endGame("Player 1 wins. \n Press Space to restart.");
+        setTimeout(endGame,1000,"Player 1 wins. \n Press Space to restart.")
     }
 }
 
