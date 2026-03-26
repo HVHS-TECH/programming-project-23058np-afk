@@ -2,22 +2,13 @@
 /*******************************************************/
 // SETUP
 /*******************************************************/
-padding = 25
 function setup() {
+    padding = 25
     createCanvas(windowWidth-padding,windowHeight-padding)
     gameMessage = "Press Space to Start"
     gameStarted = false;
     i = 0;
     u = 0;//arbitrary values! What do they do???
-
-    /*chargebar1 = new Sprite(width/2,height/2, 40,80);
-    chargebar2 = new Sprite(width/2,height/2, 40,80);
-    chargebar3 = new Sprite(width/2,height/2, 40,80);
-    chargebar4 = new Sprite(width/2,height/2, 40,80);
-    chargebar5 = new Sprite(width/2,height/2, 40,80);
-*/ 
-    
-    
 } 
 
 /*******************************************************/
@@ -28,20 +19,18 @@ function draw() {
         background(230,230,230);
         fill(0,0,0);
         textSize(16);
-        
         if (player1.overlaps(P2Laser)) {
             hit(1)
         } 
         if (player2.overlaps(P1Laser)) {
-            hit(2)
+            hit(2);
         } 
-        playerDeathSparks.opacity -= 0.1
         P1Recharge();
         P2Recharge();
         P1PointerVisuals();
         P2PointerVisuals();
         showPlayerStats();
-        if (millis())
+
     } else {
         background(0,0,0);
         fill(255,255,255);
@@ -54,6 +43,7 @@ function draw() {
         }
     }
 }
+
 function P1PointerVisuals() {
     P1LaserPointer.x = player1.x;
     P1LaserPointer.y = player1.y; 
@@ -63,7 +53,7 @@ function P1PointerVisuals() {
     P1LaserPointer.rotationSpeed = 7.5 * P1LaserPointer.rotationDirection;
     }  
     if (kb.released("x"))
-        P1LaserPointer .rotationDirection *= -1
+        P1LaserPointer.rotationDirection *= -1
 }
 
 function P2PointerVisuals() {
@@ -75,7 +65,7 @@ function P2PointerVisuals() {
     P2LaserPointer.rotationSpeed = 7.5 * P2LaserPointer.rotationDirection;
     }  
     if (kb.released(";"))
-        P2LaserPointer .rotationDirection *= -1
+        P2LaserPointer.rotationDirection *= -1
 }
 function P1Recharge() {
     if (round(millis()/450 % 2)  == 1) {
@@ -205,10 +195,10 @@ function setupPlayers() {
     player.layer = 1;
     player.health = 3;
     player.dead = false;
+    player.dead = false;
     player.overlaps(player);
 
-    playerDeathSparks = new Group();
-    playerDeathSparks.speed = 0.1
+    deathSparks = new Group();
     
     laser = new Group();
     // these two cannot go anywhere else. because i said so. (They are reference for the collision script in the draw loop before lasers are shot, and therefore need to have infinite life.)
@@ -275,50 +265,67 @@ function endGame(msg) {
 }
 
 function hit(playerHit) {
-    if (playerHit == 1) {
-        player1.health -= 1;
-        player1.text = ("owch");
-        function unOwch() {
-            player1.text = ("");
-        }     
-        setTimeout(unOwch,500)
+    if (player2.dead == false) {
+        if (playerHit == 1) {
+            player1.health -= 1;
+            player1.text = ("owch");
+            function unOwch() {
+                player1.text = ("");
+            }   
+            setTimeout(unOwch,500)
+        }
     }
-    if (playerHit == 2) {
-        player2.health -= 1;
-        player2.text = ("owch");
-        function unOwch() {
-            player2.text = ("");
-        }     
-        setTimeout(unOwch,500)
+    if (player1.dead == false) {
+        if (playerHit == 2) {
+            player2.health -= 1;
+            player2.text = ("owch");
+            function unOwch() {
+                player2.text = ("");
+            }
+            setTimeout(unOwch,500)
+        }
     }
-    checkPlayerLife();
+    function checkPlayerHealth() {
+    if (player1.health == 0) {
+        killP1();
+    }   
+    if (player2.health == 0) {
+        killP2();
+    }
+    }
+    checkPlayerHealth();
 }
 
-function checkPlayerLife() {
-    if (player1.health == 0) {
-        player.dead = true;
-        for (i = 0; i < 37; i++) {
-            P1DeathSparks = new playerDeathSparks.Sprite(player1.x,player1.y, 5,'n');
-            P1DeathSparks.direction = i * 10;
-            P1DeathSparks.speed = random(4.3,5.7)
-            P1DeathSparks.color = ("red");
-        }
-        player1.remove();
-        P1LaserPointer.remove();
-        setTimeout(endGame,1000,"Player 2 wins. \n Press Space to restart.");
+
+
+function killP1() {
+    for (i = 0; i < 150; i++) {
+        P1DeathSparks = new deathSparks.Sprite(player1.x,player1.y, 5,'n');
+        P1DeathSparks.direction = i * random(9,11);
+        P1DeathSparks.speed = random(0.6,18.2);
+        P1DeathSparks.opacity = random(0.1,0.9);
+        P1DeathSparks.color = ("red");
     }
-    if (player2.health == 0) {
-        player2.dead = true;
-        for (i = 0; i < 37; i++) {
-            P2DeathSparks = new playerDeathSparks.Sprite(player2.x,player2.y, 5,'n');
-            P2DeathSparks.direction = i * 10;
-            P2DeathSparks.speed = random(4.3,5.7)
-            P2DeathSparks.color = ("blue");
-        }
-        player2.remove();
-        P2LaserPointer.remove();
-        setTimeout(endGame,1000,"Player 1 wins. \n Press Space to restart.")
+    player1.remove();
+    P1LaserPointer.remove();
+    console.log("killed P1");
+    player1.dead = true;
+
+}
+
+function killP2() {
+    player2.dead = true;
+    for (i = 0; i < 150; i++) {
+        P2DeathSparks = new deathSparks.Sprite(player2.x,player2.y, 5,'n');
+        P2DeathSparks.direction = i * random(9,11);
+        P2DeathSparks.speed = random(0.6,8.2);
+        P2DeathSparks.opacity = random(0.1,0.9);
+        P2DeathSparks.color = ("blue");
     }
+    player2.remove();
+    P2LaserPointer.remove();
+    console.log("killed P2");
+
 }
 
 function fireTracer(playerFiring) {
